@@ -53,13 +53,13 @@ exports.globe_get_callback = function(req,res,next) {
 			access_token : data.access_token,
 			number : data.subscriber_number
 		}
-		db.get().collection('mobile_numbers', function (err, collection) {
-			if (err) return next(err);
-			collection.insert(inst, function (err) {
-				if (err) return next(err);
+		// db.get().collection('mobile_numbers', function (err, collection) {
+		// 	if (err) return next(err);
+		// 	collection.insert(inst, function (err) {
+		// 		if (err) return next(err);
 				res.send(200, {message : 'Update successful'});
-			});
-		});
+		// 	});
+		// });
 	}
 
 	var sms = globe.SMS(globe_short_code, data.subscriber_number, data.access_token);
