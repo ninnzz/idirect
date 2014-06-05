@@ -15,8 +15,8 @@ module.exports = function (router, logger) {
 	router.post('/globe/sms_notify', sms_interface.globe_sms_notify);
 	router.get('/globe/sms_notify', sms_interface.globe_sms_notify2);
 	
-	router.get('/globe/accept', call_interface.call_accept);
-	router.get('/globe/redirect', call_interface.call_redirect);
+	router.post('/globe/accept', call_interface.call_accept);
+	router.post('/globe/redirect', call_interface.call_redirect);
 
 	router.all('*', function (req, res) {
 		res.send(404, {message : 'Nothing to do here.'});
