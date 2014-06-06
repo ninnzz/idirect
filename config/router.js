@@ -1,6 +1,8 @@
 var user = require(__dirname + '/../controllers/user'),
 	sms_interface = require(__dirname + '/../controllers/interface'),
-	call_interface = require(__dirname + '/../controllers/call');
+	call_interface = require(__dirname + '/../controllers/call'),
+	directory = require(__dirname + '/../controllers/directory'),
+	places = require(__dirname + '/../controllers/places');
 
 module.exports = function (router, logger) {
 
@@ -17,6 +19,12 @@ module.exports = function (router, logger) {
 	
 	router.post('/globe/accept', call_interface.call_accept);
 	router.post('/globe/redirect', call_interface.call_redirect);
+
+	router.get('/directory/search/:term', directory.search_entry);
+	router.post('/directory/insert', directory.insert_entry);
+
+	router.get('/places', places.get_all);
+	router.get('/places/:category/:place_code', places.search_place);
 
 	router.all('*', function (req, res) {
 		res.send(404, {message : 'Nothing to do here.'});

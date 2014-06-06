@@ -11,8 +11,13 @@ var config = require(__dirname + '/../config/config'),
     globe_short_code = 21581131;
 
 exports.globe_callback = function (req, res, next) {
+<<<<<<< HEAD
     looger.log('info','Globe get callback');
 
+=======
+    logger.log('info','Globe get callback');
+	
+>>>>>>> d1752b9d0f9397747fb1d1db68b1b480399fb2a3
 	var data = req.body,
 		code = data['code'];
 
@@ -45,24 +50,29 @@ exports.globe_callback = function (req, res, next) {
 
 exports.globe_get_callback = function(req,res,next) {
 
+<<<<<<< HEAD
     looger.log('info','Globe get Callback');
 
+=======
+    logger.log('info','Globe get Callback');
+	
+>>>>>>> d1752b9d0f9397747fb1d1db68b1b480399fb2a3
 	var data = req.query;
 	console.log(data);
 
 	if (data.subscriber_number) {
 		var inst =  {
-			_id : '+63'+data.subscriber_number,
+			_id : data.subscriber_number,
 			access_token : data.access_token,
 			number : data.subscriber_number
 		}
-		// db.get().collection('mobile_numbers', function (err, collection) {
-		// 	if (err) return next(err);
-		// 	collection.insert(inst, function (err) {
-		// 		if (err) return next(err);
-				res.send(200, {message : 'Update successful'});
-		// 	});
-		// });
+		db.get().collection('mobile_numbers', function (err, collection) {
+			if (err) return next(err);
+			collection.insert(inst, function (err) {
+				if (err) return next(err);
+				res.send(200, {message : 'Insert successful'});
+			});
+		});
 	}
 	if (data.code) {
 		res.send(200, {message : 'Update successful'});
@@ -76,9 +86,14 @@ exports.globe_get_callback = function(req,res,next) {
 };
 
 exports.globe_sms_notify = function (req, res, next) {
+<<<<<<< HEAD
     looger.log('info','SMS notify.');
 
 	var coll_name = 'idirect';
+=======
+    logger.log('info','SMS notify.');
+	
+>>>>>>> d1752b9d0f9397747fb1d1db68b1b480399fb2a3
 	var data = req.body;
 	var categories = ['EMERGENCY', 'SERVICES', 'FOODS', 'OTHERS'];
 
