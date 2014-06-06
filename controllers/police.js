@@ -13,7 +13,20 @@ var config = require(__dirname + '/../config/config'),
 
 
 exports.get_all = function (req, res, next) {
-    db.get().collection('police', function (err, collection) {
+    db.get().collection('directories', function (err, collection) {
+        collection.find().toArray(function (err, docs) {
+            if (err) return next(err);
+
+            if (docs.length > 0)
+                return res.send(200, docs);
+            else 
+                res.send(400, {message : 'No results.'});
+        });
+    });
+};
+
+exports.get_messages = function (req, res, next) {
+    db.get().collection('messages', function (err, collection) {
         collection.find().toArray(function (err, docs) {
             if (err) return next(err);
 
