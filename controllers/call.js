@@ -16,7 +16,7 @@ exports.call_accept = function (req, res, next) {
 	 	say = new Say('Welcome to app name! Please enter the code given to you.'),
 	 	choices = new Choices("[DIGITS]");
 
-
+        console.log('Hello');
      
         tropo.say("Hello, World.");
 		// tropo.ask(choices, 3, false, null, "foo", null, true, say, 5, null);
