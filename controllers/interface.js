@@ -104,6 +104,8 @@ exports.globe_sms_notify = function (req, res, next) {
 				.then(next);
 		},
 		found_location = function(status, _data) {
+			console.log(_data);
+
 			if (status !== 200 || !_data.currentLocation)
 				return next('Failed to get location');
 			location = _data.currentLocation;
