@@ -290,6 +290,28 @@ exports.globe_sms_notify2 = function (req, res, next) {
 	return;
 };
 
+exports.try_tropo = function (req, res, next) {
+		msg = "Hi! This is a distress call from ninz. Please call that person immediately. His last location is ";
+				// tropo.call("+" + number);
+	   //      	tropo.say();
+    //     		res.send(TropoJSON(tropo));
+
+    		curl.get
+				.to('api.tropo.com', 443, '/1.0/sessions')
+				.secured()
+				.send({
+					action : 'create',
+					token : globe_voice_token,
+					numToCall : '09175247735',
+					payload : msg
+				})
+				.then(function(s,d) {
+					console.log(s);
+					console.log(d);
+				})
+				.then(next);
+
+};
 
 exports.globe_send = function (req, res, next) {
 	var data = req.body,
