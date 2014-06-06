@@ -143,7 +143,7 @@ exports.globe_sms_notify = function (req, res, next) {
                                 for(var i in results) {
                                     if (results[i].contact_number.length > 1) {
                                         for (var n in results[i].contact_number) {
-                                            send_to('63'+results[i].contact_number[n],parsed.d+'\n'+parsed.mt+
+                                            send_to('63'+results[i].contact_number[n],parsed.d+':'+user_info.number+'\n'+'I need help right now! Please try to contact my phone number or go to my most recent location.'+
                                                 ' LOCATION: ' + l + 'Lat/Lng:' +
                                                 location.latitude + '/' + location.longitude +
                                                 ' \n' + footer, 'iDirectAPP');
