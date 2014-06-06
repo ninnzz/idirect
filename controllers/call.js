@@ -12,7 +12,7 @@ var config = require(__dirname + '/../config/config'),
     tropowebapi = require('tropo-webapi');
 
 exports.call_accept = function (req, res, next) {
-    looger.log('info','Call accept');
+    logger.log('info','Call accept');
 
 	var tropo = new tropowebapi.TropoWebAPI(),
 	 	say = new Say('Welcome to app name! Please enter the code given to you.'),
@@ -29,7 +29,7 @@ exports.call_accept = function (req, res, next) {
 };
 
 exports.call_redirect = function(req,res,next) {
-    looger.log('info','Redirecting call');
+    logger.log('info','Redirecting call');
 
 	var tropo = new tropowebapi.TropoWebAPI();
 	tropo.say("Your zip code is " + req.body['result']['actions']['interpretation']);
