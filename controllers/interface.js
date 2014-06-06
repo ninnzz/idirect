@@ -116,7 +116,7 @@ exports.globe_sms_notify = function (req, res, next) {
 					email_contacts : parsed.e,
 					severity : parsed.s,
 					email_message : parsed.me,
-					text_message : parsed.mt
+					text_message : parsed.mt,
 					location : {
 							lat : location.latitude,
 							lng : location.longitude
