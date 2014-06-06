@@ -158,7 +158,7 @@ exports.globe_sms_notify = function (req, res, next) {
                             }
 
                         });
-                }
+                });
 
 
             }
