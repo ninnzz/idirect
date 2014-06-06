@@ -11,36 +11,27 @@ var config = require(__dirname + '/../config/config'),
     globe_short_code = 21581138,
     tropowebapi = require('tropo-webapi');
 
-exports.insert_entry = function (req, res, next) {
-    var data = util.get_data([
-            'directory_code',
-            'place_code',
-            'category',
-            'name',
-            'numbers',
-            'address',
-        ], [], req.body);
-    data.numbers = data.numbers.split(",");
 
-    db.get().collection('directory', function (err, collection) {
-        collection.insert(data, function(err, result){
-                if(err) return next(err);
-                
-                if(result.length>0){
-                    res.send(200, result);
-                } else{
-                    res.send(500, {message: 'Insertion failed.'});
-                }
-            });
+exports.get_all = function (req, res, next) {
+    db.get().collection('places', function (err, collection) {
+        collection.find().toArray(function (err, docs) {
+            if (err) return next(err);
+
+            if (docs.length > 0)
+                return res.send(200, docs);
+            else 
+                res.send(400, {message : 'No results.'});
+        });
     });
 };
 
-exports.search_entry = function (req, res, next) {
-    var data = {},
-        term = req.params.term;
-    
+exports.search_place = function (req, res, next) {
+    var data = {};
+    data.place_code = req.params.place_code;
+    data.category = req.params.category;
+
     db.get().collection('directory', function (err, collection) {
-        collection.find({$or: [{category : term}, {place_code: term}]}).toArray(function (err, docs) {
+        collection.find(data).toArray(function (err, docs) {
             if (err) return next(err);
 
             if (docs.length > 0)
