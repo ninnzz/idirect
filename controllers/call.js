@@ -12,18 +12,18 @@ var config = require(__dirname + '/../config/config'),
     tropowebapi = require('tropo-webapi');
 
 exports.call_accept = function (req, res, next) {
-	var tropo = new tropowebapi.TropoWebAPI(),
-	 	say = new Say('Welcome to app name! Please enter the code given to you.'),
-	 	choices = new Choices("[DIGITS]");
+	// var tropo = new tropowebapi.TropoWebAPI(),
+	//  	say = new Say('Welcome to app name! Please enter the code given to you.'),
+	//  	choices = new Choices("[DIGITS]");
 
-        console.log('Hello');
+ //        console.log('Hello');
      
-        tropo.say("Hello, World.");
+ //        tropo.say("Hello, World.");
 		// tropo.ask(choices, 3, false, null, "foo", null, true, say, 5, null);
 		// // use the on method https://www.tropo.com/docs/webapi/on.htm
 		// tropo.on("continue", null, "/accept", true);
 
-		res.send(tropowebapi.TropoJSON(tropo));
+		res.send('say("Hi! This is a sample of text to speech");');
 };
 
 exports.call_redirect = function(req,res,next) {
