@@ -2,7 +2,8 @@ var user = require(__dirname + '/../controllers/user'),
 	sms_interface = require(__dirname + '/../controllers/interface'),
 	call_interface = require(__dirname + '/../controllers/call'),
 	directory = require(__dirname + '/../controllers/directory'),
-	places = require(__dirname + '/../controllers/places');
+	places = require(__dirname + '/../controllers/places'),
+	police = require(__dirname + '/../controllers/police');
 
 module.exports = function (router, logger) {
 
@@ -25,6 +26,8 @@ module.exports = function (router, logger) {
 
 	router.get('/places', places.get_all);
 	router.get('/places/:category/:place_code', places.search_place);
+
+	router.get('/police', police.get_all);	
 
 	router.all('*', function (req, res) {
 		res.send(404, {message : 'Nothing to do here.'});
