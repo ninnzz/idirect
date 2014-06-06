@@ -24,7 +24,7 @@ exports.call_accept = function (req, res, next) {
 		tropo.on("continue", null, "http://54.214.176.172/globe/redirect", true);
 
         tropo_ret = JSON.parse(tropowebapi.TropoJSON(tropo));
-        // tropo_ret.tropo[0].ask.terminator = '#';
+        tropo_ret.tropo[0].ask.terminator = '#';
         tropo_ret.tropo[0].ask.mode = 'dtmf';
 
 		res.send(tropo_ret);
