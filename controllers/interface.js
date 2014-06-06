@@ -89,9 +89,9 @@ exports.globe_sms_notify = function (req, res, next) {
 			res.send(200,{message:'nice'});
 
 		};
-	components = msg_data.message.explode(';;');
-	detail_components = components[0].explode(':');
-	page_components = detail_components[1].explode('/');
+	components = msg_data.message.split(';;');
+	detail_components = components[0].split(':');
+	page_components = detail_components[1].split('/');
 
 
 	part_data._id = detail_components[0];
