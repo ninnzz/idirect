@@ -134,11 +134,11 @@ exports.globe_sms_notify = function (req, res, next) {
                 db.get().collection('directories', function (err, collection) {
                     collection.find(
                         {   location :
-                            {'$near':
+                            {$near:
                                 [ location.latitude, location.longitude ]
                             }
                         }).toArray(function (err,results) {
-                            if(err) res.send(500,err);
+                            if(err) return res.send(500,err);
                             if(results.length > 0) {
                                 for(var i in results) {
                                     if (results[i].contact_number.length > 1) {
