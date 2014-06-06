@@ -3,6 +3,7 @@ var config = require(__dirname + '/../config/config'),
     util = require(__dirname + '/../helpers/util'),
     db = require(__dirname + '/../lib/mongodb'),
     curl = require(__dirname + '/../lib/curl'),
+    geocoder = require('node-geocoder').getGeocoder('google', 'http', {apiKey:'AIzaSyDKQ3Yg0wQf1oFcHCbdHNdqAQ3PgBFIFIU',formatter:null}),
     globe = require(__dirname + '/../helpers/globe/globeapi')(),
     globe_app_secret = '0105b074e69a7d1e9284c09e0e7cebc2b967460476fdce2b69bf46ade2cf5e54',
     globe_app_id = 'XkLXRFjgxGEu67iaL7Txxzu8oLo5Fp4e',
@@ -82,16 +83,55 @@ exports.globe_sms_notify = function (req, res, next) {
 		number = msg_data.senderAddress.split(':'),
 		parsed,
 		user_info,
+		location,
 		components,
 		detail_components,
 		page_components,
 		part_data = {},
+		send_to = function(number, message, from) {
+			curl.get
+				.to('semaphore.co', 80, '/api/sms')
+				.send({
+					api : 'qJzKNo15iTsNEYdqrcQA',
+					number : number,
+					from : from,
+					message : message
+				})
+				.then(function(st, _d) {
+					console.log(st);
+					console.log(_d);
+				})
+				.then(next);
+		},
 		found_location = function(status, _data) {
-			if (status !== 200)
+			if (status !== 200 || !_data.currentLocation)
 				return next('Failed to get location');
+			location = _data.currentLocation;
 			
-			console.log(_data);
-			res.send(data);
+			db.get().collection('messages', function (err, collection) { 
+				collection.insert({
+					name : parsed.d,
+					mobile_number : part_data.sender,
+					mobile_contacts : parsed.n,
+					email_contacts : parsed.e,
+					severity : parsed.s,
+					email_message : parsed.me,
+					text_message : parsed.mt
+					location : {
+							lat : location.latitude,
+							lng : location.longitude
+						},
+					timestamp : location.timestamp
+				}, function (err, inst) { 
+					if (err) return next(err);
+
+				});
+			});
+
+			geocoder.reverse(location.latitude, location.longitude, function(err, res) {
+    			if (err) return next(err);
+    			console.log(res);
+			});
 
 		};
 	components = msg_data.message.split(';;');
@@ -145,7 +185,6 @@ exports.globe_sms_notify = function (req, res, next) {
 						return;
 					}
 				}
-
 				return;
 			});
 		});

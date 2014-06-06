@@ -16,7 +16,8 @@
     "socket.io": "~0.9.16",
     "socket.io-client": "^0.9.16",
     "mongodb": "^1.4.3",
-    "tropo-webapi": "*"
+    "tropo-webapi": "*",
+    "node-geocoder": "*"
   },
   "scripts": {
     "start": "nodemon server.js",
