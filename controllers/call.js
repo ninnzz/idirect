@@ -32,7 +32,10 @@ exports.call_accept = function (req, res, next) {
 
 exports.call_redirect = function(req,res,next) {
     logger.log('info','Redirecting call');
-
+    console.dir(req.body);
+    console.dir(req.body.result);
+    console.dir(req.body.result.actions);
+    
 	var tropo = new tropowebapi.TropoWebAPI();
     tropo.say("Hellooo");
 	tropo.say("Your zip code is " + req.body['result']['actions']['interpretation']);
