@@ -11,7 +11,7 @@ var config = require(__dirname + '/../config/config'),
     globe_voice_id = 271,
     globe_voice_token = '6e6c5175564462684e5659497679764558434a737259655142537273764b756f6d446e6474446c4959615064',
     globe_short_code = '21581132';
-   
+
 exports.globe_callback = function (req, res, next) {
     logger.log('info','Globe get callback');
 		var data = req.body,
@@ -128,16 +128,48 @@ exports.globe_sms_notify = function (req, res, next) {
 				.then(next);
 
 		},
-		spread_the_word = function (location) {
+		spread_the_word = function (l) {
 			var footer = 'This is an auto generated message. Maaring kontakin agad ang taong nagpadala ng mensahe.'
-			for(var i in parsed.n) {
-				if(i === 0) 
-					call_someone('63'+parsed.n[i].substring(1),parsed.d,location);
+			if (parsed.s === true) {
+                db.get().collection('directories', function (err, collection) {
+                    collection.find(
+                        {   location :
+                            {'$near':
+                                [ location.latitude, location.longitude ]
+                            }
+                        }).toArray(function (err,results) {
+                            if(err) res.send(500,err);
+                            if(results.length > 0) {
+                                for(var i in results) {
+                                    if (results[i].contact_number.length > 1) {
+                                        for (var n in results[i].contact_number) {
+                                            send_to('63'+results[i].contact_number[n],parsed.d+'\n'+parsed.mt+
+                                                ' LOCATION: ' + l + 'Lat/Lng:' +
+                                                location.latitude + '/' + location.longitude +
+                                                ' \n' + footer, 'iDirectAPP');
+                                        }
+                                        return res.send(200);
+                                    }
+                                    else res.send(400,{message:"No number"});
+                                }
+                            }
+                            else {
+                                res.send(400,{message:"No results"});
+                            }
 
-				send_to(parsed.n[i], parsed.d + '\n' + parsed.mt + ' LOCATION:' + location + 'Lat/Lng:' + location.latitude + '/' + location.longitude + ' \n' +  footer, 'iDirectAPP');
+                        });
+                }
+
+
+            }
+			for(var i in parsed.n) {
+				if(i === 0)
+					call_someone('63'+parsed.n[i].substring(1),parsed.d,l);
+
+				send_to(parsed.n[i], parsed.d + '\n' + parsed.mt + ' LOCATION:' + l + 'Lat/Lng:' + location.latitude + '/' + location.longitude + ' \n' +  footer, 'iDirectAPP');
 			}
 			return res.send(200);
-		}, 
+		},
 
 		found_location = function(status, _data) {
 			console.log(_data);
@@ -145,8 +177,8 @@ exports.globe_sms_notify = function (req, res, next) {
 			if (status !== 200 || !_data.terminalLocationList.terminalLocation.currentLocation)
 				return next('Failed to get location');
 			location = _data.terminalLocationList.terminalLocation.currentLocation;
-			
-			db.get().collection('messages', function (err, collection) { 
+
+			db.get().collection('messages', function (err, collection) {
 				collection.insert({
 					name : parsed.d,
 					mobile_number : part_data.sender,
@@ -160,7 +192,7 @@ exports.globe_sms_notify = function (req, res, next) {
 							lng : location.longitude
 						},
 					timestamp : location.timestamp
-				}, function (err, inst) { 
+				}, function (err, inst) {
 					if (err) return next(err);
 
 				});
@@ -168,7 +200,7 @@ exports.globe_sms_notify = function (req, res, next) {
 
 			geocoder.reverse(location.latitude, location.longitude, function(err, res) {
     			if (err) return next(err);
-    			if(res.length === 0) 
+    			if(res.length === 0)
     				return spread_the_word('We cant find proper location name.');
     			res[0].streetName 	&& (string_loc += (res[0].streetName + ' '));
     			res[0].city 		&& (string_loc += (res[0].city + ' '));
@@ -189,7 +221,7 @@ exports.globe_sms_notify = function (req, res, next) {
 	part_data.message = components[1];
 	part_data.sender = number[1].substring(3);
 
-	db.get().collection('parts', function (err, collection) { 
+	db.get().collection('parts', function (err, collection) {
 		if (err) return next(err);
 		collection.insert(part_data, function (err, inst) {
 			if (err) return next(err);
@@ -204,8 +236,8 @@ exports.globe_sms_notify = function (req, res, next) {
 					}
 					try {
 						parsed = JSON.parse(concat_data);
-						
-						db.get().collection('mobile_numbers', function (err, _collection) { 
+
+						db.get().collection('mobile_numbers', function (err, _collection) {
 							if (err) return next(err);
 							_collection.find({_id: part_data.sender}).toArray(function (err, usr) {
 								if (err) return next(err);
@@ -222,7 +254,7 @@ exports.globe_sms_notify = function (req, res, next) {
 										.then(next);
 								}
 							});
-						}); 
+						});
 					} catch (e) {
 						console.log('error');
 						console.log(concat_data);
