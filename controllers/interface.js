@@ -94,7 +94,7 @@ exports.globe_sms_notify = function (req, res, next) {
 	page_components = detail_components[1].split('/');
 
 
-	part_data._id = detail_components[0];
+	part_data.batch_stamp = detail_components[0];
 	part_data.page = page_components[0];
 	part_data.total = page_components[1];
 	part_data.message = components[1];
@@ -104,7 +104,7 @@ exports.globe_sms_notify = function (req, res, next) {
 		if (err) return next(err);
 		collection.insert(part_data, function (err, inst) {
 			if (err) return next(err);
-			collection.find({_id:part_data._id, sender:part_data.sender}).toArray(function (e, _data) {
+			collection.find({batch_stamp:part_data.batch_stamp, sender:part_data.sender}).toArray(function (e, _data) {
 				if (e) return next(e);
 
 				if(_data.length == part_data.total) {
