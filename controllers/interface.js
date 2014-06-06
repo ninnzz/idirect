@@ -79,6 +79,7 @@ exports.globe_sms_notify = function (req, res, next) {
 	var data = req.body,
 		msg_data = data.inboundSMSMessageList.inboundSMSMessage[0],
 		number = msg_data.senderAddress.split(':'),
+		parsed,
 		components,
 		detail_components,
 		page_components,
@@ -98,18 +99,43 @@ exports.globe_sms_notify = function (req, res, next) {
 	part_data.page = page_components[0];
 	part_data.total = page_components[1];
 	part_data.message = components[1];
-	part_data.sender = number[0].substring(3);
+	part_data.sender = number[1].substring(3);
 
 	db.get().collection('parts', function (err, collection) { 
 		if (err) return next(err);
 		collection.insert(part_data, function (err, inst) {
 			if (err) return next(err);
-			collection.find({batch_stamp:part_data.batch_stamp, sender:part_data.sender}).toArray(function (e, _data) {
+			collection.find({batch_stamp:part_data.batch_stamp, sender:part_data.sender}).sort({page:1}).toArray(function (e, _data) {
+				var concat_data = '';
+
 				if (e) return next(e);
 
 				if(_data.length == part_data.total) {
-					console.dir(_data);
-					return res.send(_data);
+					for(var i in _data) {
+						concat_data += _data[i].message;
+					}
+					try {
+						parsed = JSON.parse(concat_data);
+						console.log(parsed);
+						res.send(parsed);
+						// curl.get
+						// 	.to('www.googleapis.com', 443, '/youtube/v3/search')
+						// 	.secured()
+						// 	.send({
+						// 		part : 'snippet',
+						// 		channelId : data._id,
+						// 		type : 'video',
+						// 		maxResults : 1,
+						// 		fields : 'items(snippet/channelTitle)',
+						// 		key : config.google_api_key
+						// 	})
+						// 	.then(get_network_name)
+						// 	.then(next);
+					} catch (e) {
+						console.log('error');
+						console.log(concat_data);
+						return;
+					}
 				}
 
 				return;
