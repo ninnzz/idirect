@@ -8,7 +8,7 @@ var config = require(__dirname + '/../config/config'),
     globe_app_id = 'XkLXRFjgxGEu67iaL7Txxzu8oLo5Fp4e',
     globe_voice_id = 269,
     globe_voice_token = '764d437854536865594f776b7a486e66736c734c464559495972664f414a484c52526f545674636356596765',
-    globe_short_code = 21581131;
+    globe_short_code = '21581132';
    
 exports.globe_callback = function (req, res, next) {
     logger.log('info','Globe get callback');
