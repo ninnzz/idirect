@@ -15,7 +15,7 @@ exports.call_accept = function (req, res, next) {
     logger.log('info','Call accept');
 
 	var tropo = new tropowebapi.TropoWebAPI(),
-	 	say = new Say('Welcome to iDirect! For local police services, press one zero one. For local hospital sevices, press one zero two. Press # to confirm.'),
+	 	say = new Say('Welcome to iDirect! For local police services, press five. For local hospital sevices, press six. Press # to confirm.'),
 	 	choices = new Choices("[DIGITS]"),
         tropo_ret;
 
@@ -35,8 +35,7 @@ exports.call_redirect = function(req,res,next) {
 
 	var tropo = new tropowebapi.TropoWebAPI();
     tropo.say("Hellooo");
-	tropo.say("Your zip code is " + req.body['result']['actions']['interpretation']);
-
+    console.log(req.body['result']['actions']['interpretation']);
 	res.send(tropowebapi.TropoJSON(tropo));
 
 };
