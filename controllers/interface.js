@@ -80,23 +80,35 @@ exports.globe_sms_notify = function (req, res, next) {
 		msg_data = data.inboundSMSMessageList.inboundSMSMessage[0],
 		number = msg_data.senderAddress.split(':'),
 		components,
+		detail_components,
+		page_components,
+		part_data = {},
 		find_location = function(err, _data) {
 			if (err) next(err);
 			console.log(_data);
 			res.send(200,{message:'nice'});
 
 		};
-		console.log(data);
-		console.log(msg_data);
-		console.log(msg_data.message);
-	try {
-		components = JSON.parse(msg_data.message);
-		db.get().collection('mobile_numbers', function (err, collection) {
-        	collection.find({_id : number[0].substring(3)}).toArray(find_location);
-		});
-	} catch (e) {
-		console.log('not json');
-	}
+	components = msg_data.message.explode(';;');
+	detail_components = components[0].explode(':');
+	page_components = detail_components[1].explode('/');
+
+
+	part_data._id = detail_components[0];
+	part_data.page = page_components[0];
+	part_data.total = page_components[1];
+	part_data.message = components[1];
+
+	console.dir(part_data);
+
+	// try {
+	// 	components = JSON.parse(msg_data.message);
+	// 	db.get().collection('mobile_numbers', function (err, collection) {
+ //        	collection.find({_id : number[0].substring(3)}).toArray(find_location);
+	// 	});
+	// } catch (e) {
+	// 	console.log('not json');
+	// }
 
 	res.send(200);
 	return;
