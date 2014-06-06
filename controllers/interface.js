@@ -11,7 +11,8 @@ var config = require(__dirname + '/../config/config'),
     globe_short_code = 21581131;
    
 exports.globe_callback = function (req, res, next) {
-	console.log('g1');
+    looger.log('info','Globe get callback');
+	
 	var data = req.body,
 		code = data['code'];
 	
@@ -44,7 +45,8 @@ exports.globe_callback = function (req, res, next) {
 
 exports.globe_get_callback = function(req,res,next) {
 
-	console.log('g2');
+    looger.log('info','Globe get Callback');
+	
 	var data = req.query;
 	console.log(data);
 
@@ -74,6 +76,8 @@ exports.globe_get_callback = function(req,res,next) {
 };
 
 exports.globe_sms_notify = function (req, res, next) {
+    looger.log('info','SMS notify.');
+	
 	var data = req.body;
 	var updt = false;
 
