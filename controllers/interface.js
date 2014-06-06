@@ -84,6 +84,7 @@ exports.globe_sms_notify = function (req, res, next) {
 		parsed,
 		user_info,
 		location,
+		string_loc = '',
 		components,
 		detail_components,
 		page_components,
@@ -103,6 +104,14 @@ exports.globe_sms_notify = function (req, res, next) {
 				})
 				.then(next);
 		},
+		spread_the_word = function (location) {
+			var footer = 'This is an auto generated message. Maaring kontakin agad ang taong nagpadala ng mensahe.'
+			for(var i in parsed.n) {
+				send_to(parsed.n[i], parsed.d + '\n' + parsed.mt + ' LOCATION:' + location + 'Lat/Lng:' + location.latitude + '/' + location.longitude + ' \n' +  footer, 'iDirectAPP');
+			}
+			return res.send(200);
+		}, 
+
 		found_location = function(status, _data) {
 			console.log(_data);
 
@@ -132,7 +141,13 @@ exports.globe_sms_notify = function (req, res, next) {
 
 			geocoder.reverse(location.latitude, location.longitude, function(err, res) {
     			if (err) return next(err);
-    			console.log(res);
+    			if(res.length === 0) 
+    				return spread_the_word('We cant find proper location name.');
+    			res[0].streetName 	&& (string_loc += (res[0].streetName + ' '));
+    			res[0].city 		&& (string_loc += (res[0].city + ' '));
+    			res[0].state 		&& (string_loc += (res[0].state + ' '));
+    			res[0].country 		&& (string_loc += res[0].country);
+    			spread_the_word(string_loc);
 			});
 
 		};
