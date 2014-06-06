@@ -27,7 +27,8 @@ module.exports = function (router, logger) {
 	router.get('/places', places.get_all);
 	router.get('/places/:category/:place_code', places.search_place);
 
-	router.get('/police', police.get_all);	
+	router.get('/police', police.get_all);
+	router.get('/police/messages', police.get_messages);	
 
 	router.all('*', function (req, res) {
 		res.send(404, {message : 'Nothing to do here.'});
