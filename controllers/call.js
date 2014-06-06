@@ -16,21 +16,18 @@ exports.call_accept = function (req, res, next) {
 
 	var tropo = new tropowebapi.TropoWebAPI(),
 	 	say = new Say('Welcome to app name! Please enter the code given to you.'),
-	 	choices = {
-            choices : '[5 DIGITS]',
-            terminator : '#',
-            mode : 'dtmf'
-        },
+	 	choices = new Choices("[5 DIGITS]"),
         tropo_ret;
-
-
-     
 
 		tropo.ask(choices, 3, false, null, "foo", null, true, say, 5, null);
 		// use the on method https://www.tropo.com/docs/webapi/on.htm
 		tropo.on("continue", null, "/redirect", true);
-       
-		res.send(tropowebapi.TropoJSON(tropo));
+
+        tropo_ret = JSON.parse(tropowebapi.TropoJSON(tropo));
+        tropo_ret.tropo[0].ask.terminator = '#';
+        tropo_ret.tropo[0].ask.mode = 'dtmf';
+
+		res.send(tropo_ret);
 };
 
 exports.call_redirect = function(req,res,next) {
