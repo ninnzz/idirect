@@ -135,24 +135,16 @@ exports.globe_sms_notify = function (req, res, next) {
                     collection.find(
                         {   location :
                             {$near:
-                                [ location.latitude, location.longitude ]
+                                [ location.longitude, location.latitude ]
                             }
                         }).toArray(function (err,results) {
                             if(err) return res.send(500,err);
                             if(results.length > 0) {
-                                for(var i in results) {
-                                    if (results[i].contact_number.length > 1) {
-                                        for (var n in results[i].contact_number) {
-                                            send_to('63'+results[i].contact_number[n],parsed.d+':'+user_info.number+'\n'+'I need help right now! Please try to contact my phone number or go to my most recent location.'+
-                                                ' LOCATION: ' + l + 'Lat/Lng:' +
-                                                location.latitude + '/' + location.longitude +
-                                                ' \n' + footer, 'iDirectAPP');
-                                        }
-                                        return res.send(200);
-                                    }
-                                    else res.send(400,{message:"No number"});
-                                }
-                            }
+                            send_to('63'+results[0].contact_number[0],parsed.d+':'+user_info.number+'\n'+'I need help right now! Please try to contact my phone number or go to my most recent location.'+
+                                ' LOCATION: ' + l + 'Lat/Lng:' +
+                                location.latitude + '/' + location.longitude +
+                                ' \n' + footer, 'iDirectAPP');
+                         	}
                             else {
                                 res.send(400,{message:"No results"});
                             }
