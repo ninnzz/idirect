@@ -9,13 +9,13 @@ var config = require(__dirname + '/../config/config'),
     globe_voice_id = 269,
     globe_voice_token = '764d437854536865594f776b7a486e66736c734c464559495972664f414a484c52526f545674636356596765',
     globe_short_code = 21581131;
-   
+
 exports.globe_callback = function (req, res, next) {
     looger.log('info','Globe get callback');
-	
+
 	var data = req.body,
 		code = data['code'];
-	
+
 	console.log(req.query);
 
 	var auth = globe.Auth(globe_app_id, globe_app_secret);
@@ -46,7 +46,7 @@ exports.globe_callback = function (req, res, next) {
 exports.globe_get_callback = function(req,res,next) {
 
     looger.log('info','Globe get Callback');
-	
+
 	var data = req.query;
 	console.log(data);
 
@@ -77,14 +77,19 @@ exports.globe_get_callback = function(req,res,next) {
 
 exports.globe_sms_notify = function (req, res, next) {
     looger.log('info','SMS notify.');
-	
+
+	var coll_name = 'idirect';
 	var data = req.body;
 	var categories = ['EMERGENCY', 'SERVICES', 'FOODS', 'OTHERS'];
-	
+
 	var msg_data = data.inboundSMSMessageList.inboundSMSMessage[0];
 	var number = msg_data.senderAddress.split(':');
-	var n_data;	
-	
+	var n_data;
+
+	var inArray = function(value, array) {
+	    return array.indexOf(value) > -1;
+    }
+
 	console.log('------------for ESH-----------------');
 	console.dir(data);
 	console.log(msg_data);
@@ -93,21 +98,51 @@ exports.globe_sms_notify = function (req, res, next) {
 
 	if(msg_data.toLowerCase() === 'places') {
 		//do database to retrieve all places
-		//console.log(result)
+    	db.get().collection(coll_name, function (err, collection) {
+    		if (err) console.log(err);
+	    	collection.find().toArray(function (err, results) {
+		    	if (err)
+			    	console.log(err);
+    			if (results.length > 0)
+                    console.log(results);
+	    	    else console.log('No results');
+    		});
+	    });
 	}
-	n_data = msg_data.split(' ');
 
-	//if(n_data[0].toLowercase() === 'details') {
+    n_data = msg_data.split(' ');
+
+	if(n_data[0].toLowerCase() toLowercase === 'details') {
+	    db.get().collection(coll_name, function (err, collection) {
+	        if (err) console.log(err);
+            collection.find({code:n_data[1]}).toArray(function (err, results) {
+                if (err) console.log(err);
+                if (results.length > 0)
+                    console.log(results);
+                else console.log('No results');
+            });
+	    });
+    }
 		//search directory code in db
 		//if not existing, console.log(error)
 
 
-	// }
-
 	// if(category place code)
 	// query to db
-	// console.log(result)
-
+    if(inArray(n_data[0].toUpperCase(), categories)) {
+        db.get().collection(coll_name, function (err, collection) {
+            if (err) console.log(err);
+            collection.find({category:n_data[0].toUpperCase(),place_code:n_data[1]}).toArray(function (err, results) {
+                if (err) console.log(err);
+                if (results.length > 0)
+                    console.log(results);
+                else console.log('No result');
+            });
+        });
+    }
+    else {
+        console.log('Invalid Code');
+    }
 
 	//	1st step
 	//	get the information from the db. kukunin muna ung atleast 1 number from a directory,
@@ -128,7 +163,7 @@ exports.globe_sms_notify = function (req, res, next) {
 exports.globe_sms_notify2 = function (req, res, next) {
 	var data = req.body;
 
-	
+
 	console.log('notify2');
 	console.log(req.query);
 	console.log(data);
