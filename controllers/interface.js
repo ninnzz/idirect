@@ -79,18 +79,35 @@ exports.globe_sms_notify = function (req, res, next) {
     looger.log('info','SMS notify.');
 	
 	var data = req.body;
-	var updt = false;
-
+	var categories = ['EMERGENCY', 'SERVICES', 'FOODS', 'OTHERS'];
 	
-	// console.log('notify');
-	// console.log(data.inboundSMSMessageList.inboundSMSMessage);
-	// return res.send(200);
-
-	//partial
 	var msg_data = data.inboundSMSMessageList.inboundSMSMessage[0];
 	var number = msg_data.senderAddress.split(':');
 	var n_data;	
 	
+	console.log('------------for ESH-----------------');
+	console.dir(data);
+	console.log(msg_data);
+	console.log(number);
+	//parse msg_data
+
+	if(msg_data.toLowerCase() === 'places') {
+		//do database to retrieve all places
+		//console.log(result)
+	}
+	n_data = msg_data.split(' ');
+
+	//if(n_data[0].toLowercase() === 'details') {
+		//search directory code in db
+		//if not existing, console.log(error)
+
+
+	// }
+
+	// if(category place code)
+	// query to db
+	// console.log(result)
+
 
 	//	1st step
 	//	get the information from the db. kukunin muna ung atleast 1 number from a directory,
