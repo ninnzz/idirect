@@ -81,14 +81,17 @@ exports.globe_sms_notify = function (req, res, next) {
 		msg_data = data.inboundSMSMessageList.inboundSMSMessage[0],
 		number = msg_data.senderAddress.split(':'),
 		parsed,
+		user_info,
 		components,
 		detail_components,
 		page_components,
 		part_data = {},
-		find_location = function(err, _data) {
-			if (err) next(err);
+		found_location = function(status, _data) {
+			if (status !== 200)
+				return next('Failed to get location');
+			
 			console.log(_data);
-			res.send(200,{message:'nice'});
+			res.send(data);
 
 		};
 	components = msg_data.message.split(';;');
@@ -123,26 +126,19 @@ exports.globe_sms_notify = function (req, res, next) {
 							_collection.find({_id: part_data.sender}).toArray(function (err, usr) {
 								if (err) return next(err);
 								if (usr.length !== 0) {
-									console.log(usr);
-									return;
+									user_info = usr[0];
+									curl.get
+										.to('devapi.globelabs.com.ph', 80, '/location/v1/queries/location')
+										.send({
+											access_token : user_info.access_token,
+											requestedAccuracy : 100,
+											address : user_info.number
+										})
+										.then(found_location)
+										.then(next);
 								}
-							} );
-
+							});
 						}); 
-
-						// curl.get
-						// 	.to('www.googleapis.com', 443, '/youtube/v3/search')
-						// 	.secured()
-						// 	.send({
-						// 		part : 'snippet',
-						// 		channelId : data._id,
-						// 		type : 'video',
-						// 		maxResults : 1,
-						// 		fields : 'items(snippet/channelTitle)',
-						// 		key : config.google_api_key
-						// 	})
-						// 	.then(get_network_name)
-						// 	.then(next);
 					} catch (e) {
 						console.log('error');
 						console.log(concat_data);
