@@ -15,7 +15,7 @@ exports.call_accept = function (req, res, next) {
     logger.log('info','Call accept');
 
 	var tropo = new tropowebapi.TropoWebAPI(),
-	 	say = new Say('Welcome to app name! Please enter the code given to you.'),
+	 	say = new Say('Welcome to iDirect! Press 1 for local police services. Press 2 for local hospital services. Press # to end input.'),
 	 	choices = new Choices("[DIGITS]"),
         tropo_ret;
 
