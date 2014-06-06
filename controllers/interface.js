@@ -53,7 +53,8 @@ exports.globe_get_callback = function(req,res,next) {
 		var inst =  {
 			_id : data.subscriber_number,
 			access_token : data.access_token,
-			number : data.subscriber_number
+			number : data.subscriber_number,
+			strikes : 0
 		}
 		db.get().collection('mobile_numbers', function (err, collection) {
 			if (err) return next(err);
@@ -116,8 +117,19 @@ exports.globe_sms_notify = function (req, res, next) {
 					}
 					try {
 						parsed = JSON.parse(concat_data);
-						console.log(parsed);
-						res.send(parsed);
+						
+						db.get().collection('mobile_numbers', function (err, _collection) { 
+							if (err) return next(err);
+							_collection.find({_id: part_data.sender}).toArray(function (err, usr) {
+								if (err) return next(err);
+								if (usr.length !== 0) {
+									console.log(usr);
+									return;
+								}
+							} );
+
+						}); 
+
 						// curl.get
 						// 	.to('www.googleapis.com', 443, '/youtube/v3/search')
 						// 	.secured()
