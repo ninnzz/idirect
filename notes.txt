@@ -1,0 +1,43 @@
+APP functions
+
+
+PLACES  - retrieves all the places with their code and town
+		001 - METRO MANILA, NCR
+		002 - LOS BANOS LAGUNA, 4A
+
+<categories> <place code>	- retrieves all the directory for that specific place's category
+	example			establishments 004
+					emergency 002
+
+DETAILS <directory code>	- returns an instruction on how to send to that directory
+	For call, please dial 21581132 and input the directory code.
+	For text, send <directory code>: <message>						//one text, 1 peso
+
+
+places
+	code : "001"
+	province_code : "NCR"
+	town : "METRO MANILA"
+
+
+metromanila.onedirectory.com
+
+
+
+categories 
+	- EMERGENCY (2)
+	- SERVICES	(2)
+	- FOODS
+	- OTHERS
+
+
+directories entries
+	directory_code : "001"
+	place_code : "001"
+	category : EMERGENCY
+	name	: "Tay-tay police station"
+	numbers : ['91423123','912341231','912531231']
+	address : "Put the complete address here"
+
+
+
