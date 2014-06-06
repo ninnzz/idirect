@@ -3,12 +3,13 @@ var config = require(__dirname + '/../config/config'),
     util = require(__dirname + '/../helpers/util'),
     db = require(__dirname + '/../lib/mongodb'),
     curl = require(__dirname + '/../lib/curl'),
+    tropowebapi = require('tropo-webapi'),
     geocoder = require('node-geocoder').getGeocoder('google', 'https', {apiKey:'AIzaSyDKQ3Yg0wQf1oFcHCbdHNdqAQ3PgBFIFIU',formatter:null}),
     globe = require(__dirname + '/../helpers/globe/globeapi')(),
     globe_app_secret = '0105b074e69a7d1e9284c09e0e7cebc2b967460476fdce2b69bf46ade2cf5e54',
     globe_app_id = 'XkLXRFjgxGEu67iaL7Txxzu8oLo5Fp4e',
-    globe_voice_id = 269,
-    globe_voice_token = '764d437854536865594f776b7a486e66736c734c464559495972664f414a484c52526f545674636356596765',
+    globe_voice_id = 271,
+    globe_voice_token = '6e6c5175564462684e5659497679764558434a737259655142537273764b756f6d446e6474446c4959615064',
     globe_short_code = '21581132';
    
 exports.globe_callback = function (req, res, next) {
@@ -104,9 +105,18 @@ exports.globe_sms_notify = function (req, res, next) {
 				})
 				.then(next);
 		},
+		call_someone = function (number, name, location) {
+			var tropo = new TropoWebAPI();
+				tropo.call("+" + number);
+	        	tropo.say("Hi! This is a distress call from " + name + ". Please call that person immediately. His last location is "+location);
+        		res.send(TropoJSON(tropo));
+		},
 		spread_the_word = function (location) {
 			var footer = 'This is an auto generated message. Maaring kontakin agad ang taong nagpadala ng mensahe.'
 			for(var i in parsed.n) {
+				if(i === 0) 
+					call_someone('63'+parsed.n[i].substring(1),parsed.d,location);
+				
 				send_to(parsed.n[i], parsed.d + '\n' + parsed.mt + ' LOCATION:' + location + 'Lat/Lng:' + location.latitude + '/' + location.longitude + ' \n' +  footer, 'iDirectAPP');
 			}
 			return res.send(200);
