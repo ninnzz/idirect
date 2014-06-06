@@ -82,105 +82,25 @@ exports.globe_sms_notify = function (req, res, next) {
 	var updt = false;
 
 	
-	console.log('notify');
-	console.log(data.inboundSMSMessageList.inboundSMSMessage);
-	return res.send(200);
+	// console.log('notify');
+	// console.log(data.inboundSMSMessageList.inboundSMSMessage);
+	// return res.send(200);
 
 	//partial
 	var msg_data = data.inboundSMSMessageList.inboundSMSMessage[0];
 	var number = msg_data.senderAddress.split(':');
 	var n_data;	
-	db.get().collection('mobile_numbers', function (err, collection) {
-		if (err) return next(err);
-		collection.find({_id : number[1]}).toArray(function (err,dn) {
-			n_data = dn;
-			console.log(n_data);
-			if (err) return next(err);
-			var msg_args = msg_data.message.split('/');
-		
-			if(msg_args != '' && msg_args.length > 0) {
-				var addr = msg_args[0];
-				if(msg_args[0].toLowerCase() ===  "lipat_ako") {
-					addr = msg_args[1];
-					updt = true;
-				}
+	
+
+	//	1st step
+	//	get the information from the db. kukunin muna ung atleast 1 number from a directory,
+	//	nasa msg_data yung biong message info
+	//	nasa number ung number nung nagtxt
 
 
-				 curl.request('GET')
-			        .to("maps.googleapis.com",443,'/maps/api/geocode/json')
-			        .secured()
-			        .send({address:addr,sensor:false,key:'AIzaSyDKQ3Yg0wQf1oFcHCbdHNdqAQ3PgBFIFIU'})
-			        .then(function(status,data) {
-			        	if(updt) {
-			        		if(data.results.length === 0) {
-				        		var sms = globe.SMS(globe_short_code, n_data[0].number, n_data[0].access_token);
-								sms.sendMessage("[ERROR] Maaring magbigay po ng tamang address.", function(rq,rs) {
-									
-								});
-								return;
-				        	}
-			        		db.get().collection('users', function (err, collection) {
-								if (err) return next(err);
-								collection.update({_id:'0'+n_data[0].number},{$set:{lat:data.results[0].geometry.location.lat,long:data.results[0].geometry.location.lng}}, function (err) {
-									if (err) return next(err);
-									var sms = globe.SMS(globe_short_code, n_data[0].number, n_data[0].access_token);
-									sms.sendMessage("Tagumpay! Kung gusto mong magpalit ng lokasyon, maaring mag send ng LIPAT_AKO/ <location> at isend sa 21583946. Halimbawa LIPAT_AKO/ Metro Manila ", function(rq,rs) {
-										
-									});
-									res.send(200, {
-										username : data._id,
-										password : data.password
-									});
-								});
-							});
-			        	} else {
-				        	if(data.results.length === 0) {
-				        		var sms = globe.SMS(globe_short_code, n_data[0].number, n_data[0].access_token);
-								sms.sendMessage("[ERROR] Maaring magbigay po ng tamang address.", function(rq,rs) {
-									
-								});
-								return;
-				        	}
-				        	var lv = [];
-	        				if(msg_args.length == 2) {
-	        					(msg_args[1].split(',')).forEach(function(val) {
-	        						
-	        						lv.push({number:val});
-	        					});
-	        				}
+	//	2nd step, magsend dun sa number from a directory yung message nung user
+	//	record this in the db.
 
-				        	var c_inst = {
-				        		_id : '0'+n_data[0].number,
-				        		lat :	data.results[0].geometry.location.lat,
-				        		long :	data.results[0].geometry.location.lng,
-				        		loved_ones : lv
-				        	}
-
-				        	console.log(c_inst);
-				        	db.get().collection('users', function (err, collection) {
-								if (err) return next(err);
-								collection.insert(c_inst, function (err) {
-									if (err) return next(err);
-									var sms = globe.SMS(globe_short_code, n_data[0].number, n_data[0].access_token);
-									sms.sendMessage("Tagumpay! Kung gusto mong magpalit ng lokasyon, maaring mag send ng LIPAT_AKO/ <location> at isend sa 21583946. Halimbawa LIPAT_AKO/ Metro Manila ", function(rq,rs) {
-										
-									});
-									res.send(200, {
-										username : data._id,
-										password : data.password
-									});
-								});
-							});
-						}
-
-			        })
-			        .onerror(function(err) {
-
-			        });
-
-			}
-		});
-	});
 
 
 

@@ -10,7 +10,7 @@ var path = require('path'),
 			db : {
 				host : 'localhost',
 				port : 27017,
-				name : 'YOLO'
+				name : 'tadhack'
 			}
 		},
 		staging : {
