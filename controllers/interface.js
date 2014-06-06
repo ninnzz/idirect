@@ -86,6 +86,8 @@ exports.globe_sms_notify = function (req, res, next) {
 			res.send(200,{message:'nice'});
 
 		};
+		console.log(data);
+		console.log(msg_data);
 		console.log(msg_data.message);
 	try {
 		components = JSON.parse(msg_data.message);
