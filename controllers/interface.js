@@ -86,7 +86,7 @@ exports.globe_sms_notify = function (req, res, next) {
 			res.send(200,{message:'nice'});
 
 		};
-
+		console.log(msg_data.message);
 	try {
 		components = JSON.parse(msg_data.message);
 		db.get().collection('mobile_numbers', function (err, collection) {
