@@ -12,10 +12,9 @@ var config = require(__dirname + '/../config/config'),
    
 exports.globe_callback = function (req, res, next) {
     logger.log('info','Globe get callback');
-	
-	var data = req.body,
+		var data = req.body,
 		code = data['code'];
-	
+
 	console.log(req.query);
 
 	var auth = globe.Auth(globe_app_id, globe_app_secret);
@@ -45,8 +44,8 @@ exports.globe_callback = function (req, res, next) {
 
 exports.globe_get_callback = function(req,res,next) {
 
-    logger.log('info','Globe get Callback');
-	
+    looger.log('info','Globe get Callback');
+
 	var data = req.query;
 	console.log(data);
 
@@ -69,57 +68,33 @@ exports.globe_get_callback = function(req,res,next) {
 	}
 
 	var sms = globe.SMS(globe_short_code, data.subscriber_number, data.access_token);
-	sms.sendMessage("Maraming salamat sa pag gamit ng YoloApp, para mapabilang sa aming person tracker isend ang <KASALUKUYANG_ADDRESS> / <CELLPHONE NUMBER NG PWEDENG TUMULONG> at isend sa 21583946. Halimbawa: 'Tacloban Airport / 09155928321,09172957273' ", function(rq,rs) {
+	sms.sendMessage("Maraming salamat sa pag register sa iyugyog app!", function(rq,rs) {
 		console.log(rs.body);
 	});
 
 };
 
 exports.globe_sms_notify = function (req, res, next) {
-    logger.log('info','SMS notify.');
-	
-	var data = req.body;
-	var categories = ['EMERGENCY', 'SERVICES', 'FOODS', 'OTHERS'];
-	
-	var msg_data = data.inboundSMSMessageList.inboundSMSMessage[0];
-	var number = msg_data.senderAddress.split(':');
-	var n_data;	
-	
-	console.log('------------for ESH-----------------');
-	console.dir(data);
-	console.log(msg_data);
-	console.log(number);
-	//parse msg_data
+    looger.log('info','SMS notify.');
+	var data = req.body,
+		msg_data = data.inboundSMSMessageList.inboundSMSMessage[0],
+		number = msg_data.senderAddress.split(':'),
+		components,
+		find_location = function(err, _data) {
+			if (err) next(err);
+			console.log(_data);
+			res.send(200,{message:'nice'});
 
-	if(msg_data.toLowerCase() === 'places') {
-		//do database to retrieve all places
-		//console.log(result)
+		};
+
+	try {
+		components = JSON.parse(msg_data.message);
+		db.get().collection('mobile_numbers', function (err, collection) {
+        	collection.find(_id:number[0].substring(3)).toArray(find_location);
+		});
+	} catch (e) {
+		console.log('not json');
 	}
-	n_data = msg_data.split(' ');
-
-	//if(n_data[0].toLowercase() === 'details') {
-		//search directory code in db
-		//if not existing, console.log(error)
-
-
-	// }
-
-	// if(category place code)
-	// query to db
-	// console.log(result)
-
-
-	//	1st step
-	//	get the information from the db. kukunin muna ung atleast 1 number from a directory,
-	//	nasa msg_data yung biong message info
-	//	nasa number ung number nung nagtxt
-
-
-	//	2nd step, magsend dun sa number from a directory yung message nung user
-	//	record this in the db.
-
-
-
 
 	res.send(200);
 	return;
@@ -128,7 +103,7 @@ exports.globe_sms_notify = function (req, res, next) {
 exports.globe_sms_notify2 = function (req, res, next) {
 	var data = req.body;
 
-	
+
 	console.log('notify2');
 	console.log(req.query);
 	console.log(data);
