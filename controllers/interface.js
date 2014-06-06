@@ -90,7 +90,7 @@ exports.globe_sms_notify = function (req, res, next) {
 	try {
 		components = JSON.parse(msg_data.message);
 		db.get().collection('mobile_numbers', function (err, collection) {
-        	collection.find(_id:number[0].substring(3)).toArray(find_location);
+        	collection.find({_id : number[0].substring(3)}).toArray(find_location);
 		});
 	} catch (e) {
 		console.log('not json');
