@@ -106,9 +106,9 @@ exports.globe_sms_notify = function (req, res, next) {
 		found_location = function(status, _data) {
 			console.log(_data);
 
-			if (status !== 200 || !_data.currentLocation)
+			if (status !== 200 || !_data.terminalLocationList.terminalLocation.currentLocation)
 				return next('Failed to get location');
-			location = _data.currentLocation;
+			location = _data.terminalLocationList.terminalLocation.currentLocation;
 			
 			db.get().collection('messages', function (err, collection) { 
 				collection.insert({
