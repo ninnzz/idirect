@@ -16,7 +16,7 @@ exports.call_accept = function (req, res, next) {
 
 	var tropo = new tropowebapi.TropoWebAPI(),
 	 	say = new Say('Welcome to app name! Please enter the code given to you.'),
-	 	choices = new Choices("[5 DIGITS]"),
+	 	choices = "[5 DIGITS]",
         tropo_ret;
 
 		tropo.ask(choices, 3, false, null, "foo", null, true, say, 5, null);
