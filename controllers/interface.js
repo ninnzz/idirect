@@ -106,17 +106,34 @@ exports.globe_sms_notify = function (req, res, next) {
 				.then(next);
 		},
 		call_someone = function (number, name, location) {
-			var tropo = new TropoWebAPI();
-				tropo.call("+" + number);
-	        	tropo.say("Hi! This is a distress call from " + name + ". Please call that person immediately. His last location is "+location);
-        		res.send(TropoJSON(tropo));
+			var tropo = new TropoWebAPI(),
+				msg = "Hi! This is a distress call from " + name + ". Please call that person immediately. His last location is "+location;
+				// tropo.call("+" + number);
+	   //      	tropo.say();
+    //     		res.send(TropoJSON(tropo));
+
+    		curl.get
+				.to('api.tropo.com', 443, '/1.0/sessions')
+				.secured()
+				.send({
+					action : 'create',
+					token : globe_voice_token,
+					numToCall : number,
+					payload : msg
+				})
+				.then(function(s,d) {
+					console.log(s);
+					console.log(d);
+				})
+				.then(next);
+
 		},
 		spread_the_word = function (location) {
 			var footer = 'This is an auto generated message. Maaring kontakin agad ang taong nagpadala ng mensahe.'
 			for(var i in parsed.n) {
 				if(i === 0) 
 					call_someone('63'+parsed.n[i].substring(1),parsed.d,location);
-				
+
 				send_to(parsed.n[i], parsed.d + '\n' + parsed.mt + ' LOCATION:' + location + 'Lat/Lng:' + location.latitude + '/' + location.longitude + ' \n' +  footer, 'iDirectAPP');
 			}
 			return res.send(200);
