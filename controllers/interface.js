@@ -48,7 +48,7 @@ exports.globe_get_callback = function(req,res,next) {
 	var data = req.query;
 	console.log(data);
 
-	if(data.subscriber_number) {
+	if (data.subscriber_number) {
 		var inst =  {
 			_id : '+63'+data.subscriber_number,
 			access_token : data.access_token,
@@ -61,6 +61,9 @@ exports.globe_get_callback = function(req,res,next) {
 				res.send(200, {message : 'Update successful'});
 		// 	});
 		// });
+	}
+	if (data.code) {
+		res.send(200, {message : 'Update successful'});
 	}
 
 	var sms = globe.SMS(globe_short_code, data.subscriber_number, data.access_token);
@@ -76,9 +79,13 @@ exports.globe_sms_notify = function (req, res, next) {
 
 	
 	console.log('notify');
+	console.log(data);
+	return res.send(200);
+
+	//partial
 	var msg_data = data.inboundSMSMessageList.inboundSMSMessage[0];
 	var number = msg_data.senderAddress.split(':');
-	var n_data;
+	var n_data;	
 	db.get().collection('mobile_numbers', function (err, collection) {
 		if (err) return next(err);
 		collection.find({_id : number[1]}).toArray(function (err,dn) {
