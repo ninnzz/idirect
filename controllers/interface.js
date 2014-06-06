@@ -98,9 +98,24 @@ exports.globe_sms_notify = function (req, res, next) {
 	part_data.page = page_components[0];
 	part_data.total = page_components[1];
 	part_data.message = components[1];
+	part_data.sender = number[0].substring(3);
 
-	console.dir(part_data);
+	db.get().collection('parts', function (err, collection) { 
+		if (err) return next(err);
+		collection.insert(part_data, function (err, inst) {
+			if (err) return next(err);
+			collection.find({_id:part_data._id, sender:part_data.sender}).toArray(function (e, _data) {
+				if (e) return next(e);
 
+				if(_data.length == part_data.total) {
+					console.dir(_data);
+					return res.send(_data);
+				}
+
+				return;
+			});
+		});
+	});
 	// try {
 	// 	components = JSON.parse(msg_data.message);
 	// 	db.get().collection('mobile_numbers', function (err, collection) {
