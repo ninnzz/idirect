@@ -79,7 +79,7 @@ exports.globe_sms_notify = function (req, res, next) {
 
 	
 	console.log('notify');
-	console.log(data);
+	console.log(data.inboundSMSMessageList.inboundSMSMessage);
 	return res.send(200);
 
 	//partial
