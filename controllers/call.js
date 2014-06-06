@@ -4,11 +4,11 @@ var config = require(__dirname + '/../config/config'),
     db = require(__dirname + '/../lib/mongodb'),
     curl = require(__dirname + '/../lib/curl'),
     globe = require(__dirname + '/../helpers/globe/globeapi')(),
-    globe_app_secret = '0105b074e69a7d1e9284c09e0e7cebc2b967460476fdce2b69bf46ade2cf5e54',
-    globe_app_id = 'XkLXRFjgxGEu67iaL7Txxzu8oLo5Fp4e',
-    globe_voice_id = 269,
-    globe_voice_token = '764d437854536865594f776b7a486e66736c734c464559495972664f414a484c52526f545674636356596765',
-    globe_short_code = 21581131,
+    globe_app_secret = 'fce9dc687589bfbffc0882206f4384df73e3a9619e0da6d848c8135eba3a6ee1',
+    globe_app_id = 'qbk4ACBrMMeCp5irapTMnGC8kkqdCKdX',
+    globe_voice_id = '271',
+    globe_voice_token = '6e6c5175564462684e5659497679764558434a737259655142537273764b756f6d446e6474446c4959615064',
+    globe_short_code = 21581138,
     tropowebapi = require('tropo-webapi');
 
 exports.call_accept = function (req, res, next) {
@@ -18,10 +18,10 @@ exports.call_accept = function (req, res, next) {
 
 
      
-
-		tropo.ask(choices, 3, false, null, "foo", null, true, say, 5, null);
-		// use the on method https://www.tropo.com/docs/webapi/on.htm
-		tropo.on("continue", null, "/accept", true);
+        tropo.say("Hello, World.");
+		// tropo.ask(choices, 3, false, null, "foo", null, true, say, 5, null);
+		// // use the on method https://www.tropo.com/docs/webapi/on.htm
+		// tropo.on("continue", null, "/accept", true);
 
 		res.send(tropowebapi.TropoJSON(tropo));
 };
