@@ -44,7 +44,7 @@ exports.globe_callback = function (req, res, next) {
 
 exports.globe_get_callback = function(req,res,next) {
 
-    looger.log('info','Globe get Callback');
+    logger.log('info','Globe get Callback');
 
 	var data = req.query;
 	console.log(data);
@@ -75,7 +75,7 @@ exports.globe_get_callback = function(req,res,next) {
 };
 
 exports.globe_sms_notify = function (req, res, next) {
-    looger.log('info','SMS notify.');
+    logger.log('info','SMS notify.');
 	var data = req.body,
 		msg_data = data.inboundSMSMessageList.inboundSMSMessage[0],
 		number = msg_data.senderAddress.split(':'),
