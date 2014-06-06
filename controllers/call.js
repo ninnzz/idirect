@@ -16,7 +16,7 @@ exports.call_accept = function (req, res, next) {
 
 	var tropo = new tropowebapi.TropoWebAPI(),
 	 	say = new Say('Welcome to app name! Please enter the code given to you.'),
-	 	choices = "[5 DIGITS]",
+	 	choices = new Choices("[DIGITS]"),
         tropo_ret;
 
 		tropo.ask(choices, 3, false, null, "foo", null, true, say, 5, null);
@@ -34,6 +34,7 @@ exports.call_redirect = function(req,res,next) {
     logger.log('info','Redirecting call');
 
 	var tropo = new tropowebapi.TropoWebAPI();
+    tropo.say("Hellooo");
 	tropo.say("Your zip code is " + req.body['result']['actions']['interpretation']);
 
 	res.send(tropowebapi.TropoJSON(tropo));
