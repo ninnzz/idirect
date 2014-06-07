@@ -87,7 +87,7 @@ exports.call_redirect = function(req,res,next) {
     prsd.tropo[1].transfer.from = "21581150";
     console.log(prsd);
     res.writeHead(200, {'Content-Type': 'application/json'}); 
-    res.end(prsd);
+    res.end(JSON.stringify(prsd));
     return;
     if( choice*1 === 5) {
 
