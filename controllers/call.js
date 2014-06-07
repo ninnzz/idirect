@@ -37,6 +37,7 @@ exports.call_redirect = function(req,res,next) {
 	var tropo = new tropowebapi.TropoWebAPI(),
         choice,
         user_info,
+        prsd,
         caller_id = req.query.caller_id.substring(3),
         found_location = function(status, _data) {
             console.log(_data);
@@ -56,16 +57,9 @@ exports.call_redirect = function(req,res,next) {
                         if(results.length > 0) {
                             var say = new Say("http://www.phono.com/audio/holdmusic.mp3");
                             var on = {"event":"ring", "say": say};
-                            var prsd;
                             
-                            tropo.transfer(['+63'+results[0].data[0].contact_number[0],'sip:21581001@sip.tropo.net'], {playvalue: "http://www.phono.com/audio/holdmusic.mp3", terminator : "*", from: "ShakeCast"});
-                            // console.log(tropowebapi.TropoJSON(tropo));
-                            prsd =  JSON.parse(tropowebapi.TropoJSON(tropo));
-                            prsd.tropo[1].transfer.playvalue = "http://www.phono.com/audio/holdmusic.mp3";
-                            prsd.tropo[1].transfer.terminator = "*";
-                            prsd.tropo[1].transfer.from = "21581150";
-                            console.dir(JSON.stringify(prsd));
-                            res.send(prsd);
+                            
+                           
                         }
                         else {
                             res.send(400,{message:"No results"});
@@ -78,6 +72,18 @@ exports.call_redirect = function(req,res,next) {
     tropo.say("Please wait while we connect you to someone.");
     choice = req.body['result']['actions']['interpretation'];
     if( choice*1 === 5) {
+
+         tropo.transfer(['+639268339986','sip:21581150@sip.tropo.net'], {playvalue: "http://www.phono.com/audio/holdmusic.mp3", terminator : "*", from: "ShakeCast"});
+                            // console.log(tropowebapi.TropoJSON(tropo));
+                            prsd =  JSON.parse(tropowebapi.TropoJSON(tropo));
+                            prsd.tropo[1].transfer.playvalue = "http://www.phono.com/audio/holdmusic.mp3";
+                            prsd.tropo[1].transfer.terminator = "*";
+                            prsd.tropo[1].transfer.from = "21581150";
+                            console.dir(JSON.stringify(prsd));
+                            res.send(prsd);
+
+return;
+
 
         db.get().collection('mobile_numbers', function (err, _collection) {
             if (err) return next(err);
