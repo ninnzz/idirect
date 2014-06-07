@@ -6,10 +6,10 @@ var config = require(__dirname + '/../config/config'),
     tropowebapi = require('tropo-webapi'),
     geocoder = require('node-geocoder').getGeocoder('google', 'https', {apiKey:'AIzaSyDKQ3Yg0wQf1oFcHCbdHNdqAQ3PgBFIFIU',formatter:null}),
     globe = require(__dirname + '/../helpers/globe/globeapi')(),
-    globe_app_secret = '0105b074e69a7d1e9284c09e0e7cebc2b967460476fdce2b69bf46ade2cf5e54',
-    globe_app_id = 'XkLXRFjgxGEu67iaL7Txxzu8oLo5Fp4e',
-    globe_voice_id = 271,
-    globe_voice_token = '6e6c5175564462684e5659497679764558434a737259655142537273764b756f6d446e6474446c4959615064',
+    globe_app_secret = '52f693852adc713551df811e00f8ce6525efc591748e402bb84c08ab2dfc41e5',
+    globe_app_id = '4pGoBIaoRb8tBginpgTR6gtEaGy9I5Mz',
+    globe_voice_id = 287,
+    globe_voice_token = '42576f634348496d4b554f55715a445473614e74794b5875755253657a715076707772664c4b647267704347',
     globe_short_code = '21581132';
 
 exports.globe_callback = function (req, res, next) {
@@ -71,7 +71,7 @@ exports.globe_get_callback = function(req,res,next) {
 	}
 
 	var sms = globe.SMS(globe_short_code, data.subscriber_number, data.access_token);
-	sms.sendMessage("Maraming salamat sa pag register sa iyugyog app!", function(rq,rs) {
+	sms.sendMessage("Thank you for registering in ShakeCast! Download the android app to fully use the system in times of danger. ShakeCast allows you to shake your mobile device in times of danger. Once shaken, the application will send distress messages to your relatives and authorities.", function(rq,rs) {
 		console.log(rs.body);
 	});
 
