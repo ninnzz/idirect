@@ -36,15 +36,16 @@ exports.call_redirect = function(req,res,next) {
 	var tropo = new tropowebapi.TropoWebAPI(),
         choice;
 
-    console.dir(currentCall);
     console.dir(req.body);
+    console.dir(req.session);
+    
     console.dir(req.body['result']);
 
 
     tropo.say("Please wait while we connect you to someone.");
     choice = req.body['result']['actions']['interpretation'];
     if( choice*1 === 5) {
-        
+
     } else if( choice*1 === 6) {
 
     } else {
