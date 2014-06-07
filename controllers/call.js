@@ -64,6 +64,7 @@ exports.call_redirect = function(req,res,next) {
                             prsd.tropo[0].transfer.playvalue = "http://www.phono.com/audio/holdmusic.mp3";
                             prsd.tropo[0].transfer.terminator = "*";
                             prsd.tropo[0].transfer.from = "21581150";
+                            console.log(prsd);
                             res.send(prsd);
                         }
                         else {
