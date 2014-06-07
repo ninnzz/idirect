@@ -58,7 +58,7 @@ exports.call_redirect = function(req,res,next) {
                             var on = {"event":"ring", "say": say};
                             var prsd;
                             
-                            tropo.transfer(['sip:'+results[0].data[0].contact_number[0]+'@sip.tropo.net','sip:21581150@sip.tropo.net'], {playvalue: "http://www.phono.com/audio/holdmusic.mp3", terminator : "*", from: "ShakeCast"});
+                            tropo.transfer(['+63'+results[0].data[0].contact_number[0],'sip:21581001@sip.tropo.net'], {playvalue: "http://www.phono.com/audio/holdmusic.mp3", terminator : "*", from: "ShakeCast"});
                             // console.log(tropowebapi.TropoJSON(tropo));
                             prsd =  JSON.parse(tropowebapi.TropoJSON(tropo));
                             prsd.tropo[1].transfer.playvalue = "http://www.phono.com/audio/holdmusic.mp3";
