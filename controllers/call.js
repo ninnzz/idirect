@@ -14,6 +14,8 @@ var config = require(__dirname + '/../config/config'),
 exports.call_accept = function (req, res, next) {
     logger.log('info','Call accept');
 
+    console.dir(req.body);
+
 	var tropo = new tropowebapi.TropoWebAPI(),
 	 	say = new Say('Welcome to ShakeCast! For local police services, press five. For local hospital sevrices, press six. Press # to confirm.'),
 	 	choices = new Choices("[DIGITS]"),
@@ -36,8 +38,7 @@ exports.call_redirect = function(req,res,next) {
 	var tropo = new tropowebapi.TropoWebAPI(),
         choice;
 
-    console.dir(req.body);
-
+    
     console.dir(req.body['result']);
 
 
