@@ -36,8 +36,7 @@ exports.call_redirect = function(req,res,next) {
 	var tropo = new tropowebapi.TropoWebAPI(),
         choice;
 
-    console.dir(req);
-    console.dir(req.session);
+    console.dir(req.body);
 
     console.dir(req.body['result']);
 
