@@ -57,7 +57,7 @@ exports.call_redirect = function(req,res,next) {
                             var say = new Say("http://www.phono.com/audio/holdmusic.mp3");
                             var on = {"event":"ring", "say": say};
                             
-                            tropo.transfer('sip:63'+results[0].data[0].contact_number[0]+'@sip.tropo.net', null, null, null, null, on, null, null);
+                            tropo.transfer('+63'+results[0].data[0].contact_number[0], null, null, null, null, on, null, null);
                             res.writeHead(200, {'Content-Type': 'application/json'}); 
                             console.log(tropowebapi.TropoJSON(tropo));
                             res.end(tropowebapi.TropoJSON(tropo));
