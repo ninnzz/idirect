@@ -6,11 +6,11 @@ var config = require(__dirname + '/../config/config'),
     tropowebapi = require('tropo-webapi'),
     geocoder = require('node-geocoder').getGeocoder('google', 'https', {apiKey:'AIzaSyDKQ3Yg0wQf1oFcHCbdHNdqAQ3PgBFIFIU',formatter:null}),
     globe = require(__dirname + '/../helpers/globe/globeapi')(),
-    globe_app_secret = '52f693852adc713551df811e00f8ce6525efc591748e402bb84c08ab2dfc41e5',
-    globe_app_id = '4pGoBIaoRb8tBginpgTR6gtEaGy9I5Mz',
+    globe_app_secret = 'c493b9bc145b88d11bc401eb1a0686ff50588d39c58409958f99d540eaf8afda',
+    globe_app_id = 'Gd9ons7nBEoC7kTRX9cB8GCdX9z4s6x9',
     globe_voice_id = 287,
     globe_voice_token = '42576f634348496d4b554f55715a445473614e74794b5875755253657a715076707772664c4b647267704347',
-    globe_short_code = '21581132';
+    globe_short_code = '21581150';
 
 exports.globe_callback = function (req, res, next) {
     logger.log('info','Globe get callback');
