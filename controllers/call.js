@@ -53,14 +53,10 @@ exports.call_redirect = function(req,res,next) {
                         }
                     }).toArray(function (err,results) {
                         if(err) return res.send(500,err);
-                        console.log(results);
                         if(results.length > 0) {
-                        // send_to('63'+results[0].data[0].contact_number[0],parsed.d+':'+user_info.number+'\n'+'I need help right now! Please try to contact my phone number or go to my most recent location.'+
-                        //     ' LOCATION: ' + l + 'Lat/Lng:' +
-                        //     location.latitude + '/' + location.longitude +
-                        //     ' \n' + footer, 'iDirectAPP');
-                            tropo.transfer('63'+results[0].data[0].contact_number[0], false, null, null, {'x-caller-name' : 'Mark Headd'}, null, null, true, '#', 60.0);
+                            tropo.transfer('+63'+results[0].data[0].contact_number[0], false, null, null, {'x-caller-name' : 'Mark Headd'}, null, null, true, '#', 60.0);
                             res.writeHead(200, {'Content-Type': 'application/json'}); 
+                            console.log(tropowebapi.TropoJSON(tropo));
                             res.end(tropowebapi.TropoJSON(tropo));
                         }
                         else {
