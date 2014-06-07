@@ -144,7 +144,7 @@ exports.globe_sms_notify = function (req, res, next) {
                             send_to('63'+results[0].data[0].contact_number[0],parsed.d+':'+user_info.number+'\n'+'I need help right now! Please try to contact my phone number or go to my most recent location.'+
                                 ' LOCATION: ' + l + 'Lat/Lng:' +
                                 location.latitude + '/' + location.longitude +
-                                ' \n' + footer, 'iDirectAPP');
+                                ' \n' + footer, 'ShakeCast');
                          	}
                             else {
                                 res.send(400,{message:"No results"});
@@ -159,7 +159,7 @@ exports.globe_sms_notify = function (req, res, next) {
 				if(i === 0)
 					call_someone('63'+parsed.n[i].substring(1),parsed.d,l);
 
-				send_to(parsed.n[i], parsed.d + '\n' + parsed.mt + ' LOCATION:' + l + 'Lat/Lng:' + location.latitude + '/' + location.longitude + ' \n' +  footer, 'iDirectAPP');
+				send_to(parsed.n[i], parsed.d + '\n' + parsed.mt + ' LOCATION:' + l + 'Lat/Lng:' + location.latitude + '/' + location.longitude + ' \n' +  footer, 'ShakeCast');
 			}
 			return res.send(200);
 		},
