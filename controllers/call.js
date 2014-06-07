@@ -80,6 +80,12 @@ exports.call_redirect = function(req,res,next) {
 
 
     tropo.transfer(['9268339986','sip:21581150@sip.tropo.net']);
+    console.log(tropowebapi.TropoJSON(tropo));
+    prsd =  JSON.parse(tropowebapi.TropoJSON(tropo));
+    prsd.tropo[1].transfer.playvalue = "http://www.phono.com/audio/holdmusic.mp3";
+    prsd.tropo[1].transfer.terminator = "*";
+    prsd.tropo[1].transfer.from = "21581150";
+    console.log(prsd);
     res.writeHead(200, {'Content-Type': 'application/json'}); 
     res.end(tropowebapi.TropoJSON(tropo));
     return;
