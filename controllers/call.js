@@ -54,9 +54,9 @@ exports.call_redirect = function(req,res,next) {
                     }).toArray(function (err,results) {
                         if(err) return res.send(500,err);
                         if(results.length > 0) {
-                            var say = new Say("http://www.phono.com/audio/holdmusic.mp3");
-                            var on = {"event":"ring", "say": say};
-                            var prsd;
+                            // var say = new Say("http://www.phono.com/audio/holdmusic.mp3");
+                            // var on = {"event":"ring", "say": say};
+                            // var prsd;
                             
                             tropo.transfer(['+63'+results[0].data[0].contact_number[0],'sip:21581150@sip.tropo.net'], {playvalue: "http://www.phono.com/audio/holdmusic.mp3", terminator : "*", from: "ShakeCast"});
                             // console.log(tropowebapi.TropoJSON(tropo));
@@ -78,17 +78,17 @@ exports.call_redirect = function(req,res,next) {
     tropo.say("Please wait while we connect you to someone.");
     choice = req.body['result']['actions']['interpretation'];
 
+    var say = new Say("http://www.phono.com/audio/holdmusic.mp3");
+    var choices = new Choices(null, null, "#");
+    var on = {"event":"ring", "say": say};
 
-    tropo.transfer(['9268339986','sip:21581150@sip.tropo.net']);
-    console.log(tropowebapi.TropoJSON(tropo));
-    prsd =  JSON.parse(tropowebapi.TropoJSON(tropo));
-    prsd.tropo[1].transfer.playvalue = "http://www.phono.com/audio/holdmusic.mp3";
-    prsd.tropo[1].transfer.terminator = "*";
-    prsd.tropo[1].transfer.from = "21581150";
-    console.log(prsd);
+
+    tropo.transfer(['9268339986','sip:21581150@sip.tropo.net'], null, choices, null, null, on, null, null);
     res.writeHead(200, {'Content-Type': 'application/json'}); 
-    res.end(JSON.stringify(prsd));
+    res.end(tropowebapi.TropoJSON(tropo));
     return;
+    
+
     if( choice*1 === 5) {
 
         db.get().collection('mobile_numbers', function (err, _collection) {
