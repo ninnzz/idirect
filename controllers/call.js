@@ -79,7 +79,7 @@ exports.call_redirect = function(req,res,next) {
     choice = req.body['result']['actions']['interpretation'];
 
 
-    tropo.transfer('+639268339986');
+    tropo.transfer(['9268339986','sip:21581150@sip.tropo.net']);
     res.writeHead(200, {'Content-Type': 'application/json'}); 
     res.end(tropowebapi.TropoJSON(tropo));
     return;
