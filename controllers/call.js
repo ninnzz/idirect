@@ -35,14 +35,65 @@ exports.call_redirect = function(req,res,next) {
     logger.log('info','Redirecting call');
 
 	var tropo = new tropowebapi.TropoWebAPI(),
-        choice;
+        choice,
+        user_info,
+        caller_id = req.query.caller_id.substring(3),
+        found_location = function(status, _data) {
+            console.log(_data);
+
+            if (status !== 200 || !_data.terminalLocationList.terminalLocation.currentLocation)
+                return next('Failed to get location');
+            location = _data.terminalLocationList.terminalLocation.currentLocation;
+
+            db.get().collection('directories', function (err, collection) {
+                collection.find(
+                    {   location :
+                        {
+                            $near: [ location.longitude, location.latitude ]
+                        }
+                    }).toArray(function (err,results) {
+                        if(err) return res.send(500,err);
+                        console.log(results);
+                        if(results.length > 0) {
+                        // send_to('63'+results[0].data[0].contact_number[0],parsed.d+':'+user_info.number+'\n'+'I need help right now! Please try to contact my phone number or go to my most recent location.'+
+                        //     ' LOCATION: ' + l + 'Lat/Lng:' +
+                        //     location.latitude + '/' + location.longitude +
+                        //     ' \n' + footer, 'iDirectAPP');
+                            tropo.transfer('63'+results[0].data[0].contact_number[0], false, null, null, {'x-caller-name' : 'Mark Headd'}, null, null, true, '#', 60.0);
+                            res.writeHead(200, {'Content-Type': 'application/json'}); 
+                            res.end(tropowebapi.TropoJSON(tropo));
+                        }
+                        else {
+                            res.send(400,{message:"No results"});
+                        }
+
+                    });
+            });
+        };
     
-    console.dir(req.query);
-
-
     tropo.say("Please wait while we connect you to someone.");
     choice = req.body['result']['actions']['interpretation'];
     if( choice*1 === 5) {
+
+        db.get().collection('mobile_numbers', function (err, _collection) {
+            if (err) return next(err);
+            _collection.find({_id: caller_id}).toArray(function (err, usr) {
+                if (err) return next(err);
+                if (usr.length !== 0) {
+                    user_info = usr[0];
+                    curl.get
+                        .to('devapi.globelabs.com.ph', 80, '/location/v1/queries/location')
+                        .send({
+                            access_token : user_info.access_token,
+                            requestedAccuracy : 100,
+                            address : user_info.number
+                        })
+                        .then(found_location)
+                        .then(next);
+                }
+            });
+        });
+
 
     } else if( choice*1 === 6) {
 
