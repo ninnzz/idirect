@@ -22,7 +22,7 @@ exports.call_accept = function (req, res, next) {
 
 		tropo.ask(choices, 3, false, null, "foo", null, true, say, 5, null);
 		// use the on method https://www.tropo.com/docs/webapi/on.htm
-		tropo.on("continue", null, "http://54.214.176.172/globe/redirect?caller_id="caller_id, true);
+		tropo.on("continue", null, "http://54.214.176.172/globe/redirect?caller_id="+caller_id, true);
 
         tropo_ret = JSON.parse(tropowebapi.TropoJSON(tropo));
         tropo_ret.tropo[0].ask.terminator = '#';
