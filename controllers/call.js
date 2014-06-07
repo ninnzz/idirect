@@ -15,7 +15,7 @@ exports.call_accept = function (req, res, next) {
     logger.log('info','Call accept');
 
 	var tropo = new tropowebapi.TropoWebAPI(),
-	 	say = new Say('Welcome to iDirect! For local police services, press five. For local hospital sevices, press six. Press # to confirm.'),
+	 	say = new Say('Welcome to ShakeCast! For local police services, press five. For local hospital sevrices, press six. Press # to confirm.'),
 	 	choices = new Choices("[DIGITS]"),
         tropo_ret;
 
@@ -33,9 +33,21 @@ exports.call_accept = function (req, res, next) {
 exports.call_redirect = function(req,res,next) {
     logger.log('info','Redirecting call');
 
-	var tropo = new tropowebapi.TropoWebAPI();
-    tropo.say("Hellooo");
-    console.log(req.body['result']['actions']['interpretation']);
-	res.send(tropowebapi.TropoJSON(tropo));
+	var tropo = new tropowebapi.TropoWebAPI(),
+        choice;
+
+    console.dir(req.body['result']);
+
+
+    tropo.say("Please wait while we connect you to someone.");
+    choice = req.body['result']['actions']['interpretation'];
+    if(choice*1 === 5) {
+
+    } else if( choice*1 === 6) {
+
+    } else {
+        tropo.say("Sorry but we cant identify your input.");
+    	res.send(tropowebapi.TropoJSON(tropo));
+    }
 
 };
