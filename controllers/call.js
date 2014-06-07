@@ -14,16 +14,15 @@ var config = require(__dirname + '/../config/config'),
 exports.call_accept = function (req, res, next) {
     logger.log('info','Call accept');
 
-    console.dir(req.body);
-
-	var tropo = new tropowebapi.TropoWebAPI(),
+	var tropo = new tropowebapi.TropoWebAPI()
+        caller_id = req.body.session.from.id,
 	 	say = new Say('Welcome to ShakeCast! For local police services, press five. For local hospital sevrices, press six. Press # to confirm.'),
 	 	choices = new Choices("[DIGITS]"),
         tropo_ret;
 
 		tropo.ask(choices, 3, false, null, "foo", null, true, say, 5, null);
 		// use the on method https://www.tropo.com/docs/webapi/on.htm
-		tropo.on("continue", null, "http://54.214.176.172/globe/redirect", true);
+		tropo.on("continue", null, "http://54.214.176.172/globe/redirect?caller_id="caller_id, true);
 
         tropo_ret = JSON.parse(tropowebapi.TropoJSON(tropo));
         tropo_ret.tropo[0].ask.terminator = '#';
@@ -37,9 +36,8 @@ exports.call_redirect = function(req,res,next) {
 
 	var tropo = new tropowebapi.TropoWebAPI(),
         choice;
-
     
-    console.dir(req.body['result']);
+    console.dir(req.query);
 
 
     tropo.say("Please wait while we connect you to someone.");
